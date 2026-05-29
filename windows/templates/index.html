@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<!--
+This Source Code Form is subject to the terms of the Mozilla Public
+License, v. 2.0. If a copy of the MPL was not distributed with this file,
+You can obtain one at https://mozilla.org/MPL/2.0/.
+
+Copyright (c) 2026 LingXuan-Li
+-->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Qt WebChannel -->
+<script src="qrc:///qtwebchannel/qwebchannel.js"></script>
+<title>GelMa - HOME</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    min-height:100vh;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    background: rgb(160,160,160);
+    color:white;
+    padding:40px 20px;
+}
+
+.container{
+    max-width:1400px;
+    margin:auto;
+}
+
+.header{
+    text-align:center;
+    margin-bottom:40px;
+}
+
+.header h1{
+    font-size:3rem;
+    margin-bottom:10px;
+    text-shadow:0 4px 12px rgba(0,0,0,.3);
+}
+
+.header p{
+    opacity:.9;
+}
+
+/* Search */
+
+.search-section{
+    display:flex;
+    gap:10px;
+    background:white;
+    padding:15px;
+    border-radius:60px;
+    margin-bottom:30px;
+    box-shadow:0 10px 30px rgba(0,0,0,.25);
+}
+
+.search-section input{
+    flex:1;
+    border:none;
+    outline:none;
+    font-size:1rem;
+    padding:10px;
+}
+
+.search-section button{
+    border:none;
+    background:rgb(75, 51, 102);
+    color:white;
+    padding:12px 24px;
+    border-radius:40px;
+    cursor:pointer;
+    font-weight:bold;
+    transition:.2s;
+}
+
+.search-section button:hover{
+    transform:scale(1.05);
+}
+
+/* Add Shortcut */
+
+.add-shortcut-section{
+    background:rgba(255,255,255,.12);
+    -webkit-backdrop-filter:blur(10px);
+    backdrop-filter:blur(10px);
+    padding:20px;
+    border-radius:20px;
+    margin-bottom:40px;
+}
+
+.add-shortcut-form{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    align-items:center;
+}
+
+.add-shortcut-form input{
+    flex:1;
+    min-width:220px;
+    padding:14px;
+    border:none;
+    border-radius:10px;
+    outline:none;
+}
+
+.add-shortcut-form button{
+    border:none;
+    padding:14px 24px;
+    border-radius:10px;
+    cursor:pointer;
+    background:white;
+    color:#333;
+    font-weight:bold;
+    transition:.2s;
+}
+
+.add-shortcut-form button:hover{
+    transform:scale(1.05);
+}
+
+/* Grid */
+
+.shortcuts-title{
+    font-size:1.5rem;
+    margin-bottom:20px;
+    font-weight:bold;
+}
+
+.tiles-grid{
+    display:grid;
+    grid-template-columns:
+        repeat(auto-fit,minmax(250px,1fr));
+    gap:25px;
+}
+
+/* Tile */
+
+.tile{
+    position:relative;
+    overflow:hidden;
+    border-radius:20px;
+    background:white;
+    color:#333;
+    cursor:pointer;
+    transition:.25s;
+    box-shadow:0 10px 30px rgba(0,0,0,.2);
+}
+
+.tile:hover{
+    transform:translateY(-10px);
+    box-shadow:0 20px 50px rgba(0,0,0,.35);
+}
+
+.tile-header{
+    height:140px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    overflow:hidden;
+}
+
+.tile-header::after{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:rgba(255,255,255,.05);
+}
+
+.tile-icon{
+    font-size:3rem;
+    z-index:2;
+}
+
+.tile-body{
+    padding:18px;
+}
+
+.tile-title{
+    font-size:1.2rem;
+    font-weight:bold;
+    margin-bottom:10px;
+}
+
+.tile-url{
+    font-size:.85rem;
+    color:#777;
+    word-break:break-all;
+}
+
+.tile-favicon{
+    width:22px;
+    height:22px;
+    position:absolute;
+    top:10px;
+    left:10px;
+    background:white;
+    border-radius:50%;
+    padding:2px;
+}
+
+.tile-delete{
+    position:absolute;
+    top:10px;
+    right:10px;
+    width:32px;
+    height:32px;
+    border:none;
+    border-radius:50%;
+    background:rgba(255,0,0,.85);
+    color:white;
+    cursor:pointer;
+    font-weight:bold;
+    display:none;
+    z-index:3;
+}
+
+.tile:hover .tile-delete{
+    display:block;
+}
+
+.empty-message{
+    text-align:center;
+    padding:60px;
+    opacity:.8;
+}
+
+/* Themes */
+
+.youtube .tile-header{
+    background:linear-gradient(135deg,#ff0000,#282828);
+}
+
+.google .tile-header{
+    background:linear-gradient(135deg,#4285F4,#EA4335,#FBBC05,#34A853);
+}
+
+.github .tile-header{
+    background:linear-gradient(135deg,#333,#111);
+}
+
+.amazon .tile-header{
+    background:linear-gradient(135deg,#FF9900,#232F3E);
+}
+
+.twitter .tile-header{
+    background:linear-gradient(135deg,#000,#1DA1F2);
+}
+
+.linkedin .tile-header{
+    background:linear-gradient(135deg,#0A66C2,#FFF);
+}
+
+.spotify .tile-header{
+    background:linear-gradient(135deg,#1DB954,#191414);
+}
+
+.discord .tile-header{
+    background:linear-gradient(135deg,#5865F2,#23272A);
+}
+
+.firefox .tile-header{
+    background:linear-gradient(135deg,#FF7139,#00539F);
+}
+
+.instagram .tile-header{
+    background:linear-gradient(135deg,#E4405F,#FCAF45,#833AB4);
+}
+
+.facebook .tile-header{
+    background:linear-gradient(135deg,#1877F2,#FFF);
+}
+
+.netflix .tile-header{
+    background:linear-gradient(135deg,#E50914,#221F1F);
+}
+
+.tiktok .tile-header{
+    background:linear-gradient(135deg,#000,#25F4EE,#FE2C55);
+}
+
+.reddit .tile-header{
+    background:linear-gradient(135deg,#FF4500,#CEE3F8);
+}
+
+.wikipedia .tile-header{
+    background:linear-gradient(135deg,#000,#FFF,#636466);
+}
+
+.yahoo .tile-header{
+    background:linear-gradient(135deg,#6001D2,#FFF);
+}
+
+.bing .tile-header{
+    background:linear-gradient(135deg,#008373,#F2F2F2);
+}
+
+.duckduckgo .tile-header{
+    background:linear-gradient(135deg,#DE5833,#FFF);
+}
+
+.apple .tile-header{
+    background:linear-gradient(135deg,#A2AAAD,#000);
+}
+
+.microsoft .tile-header{
+    background:linear-gradient(135deg,#F25022,#7FBA00,#00A4EF,#FFB900);
+}
+
+.chatgpt .tile-header{
+    background:linear-gradient(135deg,#10A37F,#202123);
+}
+
+.gemini .tile-header{
+    background:linear-gradient(135deg,#4285F4,#8E75FF);
+}
+
+.claude .tile-header{
+    background:linear-gradient(135deg,#D97757,#2D2D2D);
+}
+
+.google-drive .tile-header{
+    background:linear-gradient(135deg,#0F9D58,#4285F4,#F4B400);
+}
+
+.google-maps .tile-header{
+    background:linear-gradient(135deg,#34A853,#EA4335,#4285F4);
+}
+
+.slack .tile-header{
+    background:linear-gradient(135deg,#4A154B,#36C5F0,#2EB67D,#ECB22E);
+}
+
+.notion .tile-header{
+    background:linear-gradient(135deg,#000,#FFF);
+}
+
+.figma .tile-header{
+    background:linear-gradient(135deg,#F24E1E,#A259FF,#0ACF83);
+}
+
+.zann .tile-header{
+    background:linear-gradient(135deg,#3EA8FF,#0F172A);
+}
+
+.qiita .tile-header{
+    background:linear-gradient(135deg,#55C500,#2C2C2C);
+}
+
+.gamewith .tile-header{
+    background:linear-gradient(135deg,#34b792,#f8f8f8);
+}
+
+.game8 .tile-header{
+    background:linear-gradient(135deg,#ffe053,#000);
+}
+
+.nicovideo .tile-header{
+    background:linear-gradient(135deg,#252525,#FFF);
+}
+
+.tenki .tile-header{
+    background:linear-gradient(135deg,#0085CC,#F5A623);
+}
+
+.wikidot .tile-header{
+    background:linear-gradient(135deg,#000,#ff0109, #e5e5e0);
+}
+
+.local .tile-header{
+    background:linear-gradient(135deg,#4CAF50,#263238);
+}
+
+.default .tile-header{
+    background:linear-gradient(135deg,#5800bd,#af0daf);
+}
+
+/* Footer */
+
+.footer{
+    text-align:center;
+    margin-top:60px;
+    opacity:.7;
+}
+
+/* Mobile */
+
+@media(max-width:768px){
+
+    .header h1{
+        font-size:2rem;
+    }
+
+    .search-section{
+        flex-direction:column;
+        border-radius:20px;
+    }
+
+    .search-section button{
+        width:100%;
+    }
+
+    .add-shortcut-form{
+        flex-direction:column;
+    }
+
+    .add-shortcut-form input,
+    .add-shortcut-form button{
+        width:100%;
+    }
+}
+
+.display-none{
+    display:none;
+}
+
+.img-container {
+  display: flex;
+  justify-content: center; /* 横方向中央寄せ */
+  gap: 10px;              /* 画像の間隔 */
+}
+
+.img-container img {
+  height: 75px; /* 必要に応じて */
+  width: auto;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <div class="img-container">
+            <img src="./figure/icon.svg" alt="GelMa Icon">
+            <img src="./figure/logo.svg" alt="GelMa Text Logo">
+        </div>
+        <br>
+        <p>TV Web Viewer Shortcut Manager</p>
+    </div>
+
+    <!-- Search -->
+    <div class="search-section">
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="Search on Google..."
+        />
+
+        <button onclick="googleSearch()">
+            🔍 Search
+        </button>
+    </div>
+
+    <!-- Add Shortcut -->
+    <div class="add-shortcut-section">
+
+        <div class="add-shortcut-form">
+
+            <input
+                type="text"
+                id="shortcutName"
+                placeholder="Site Name / Shortcut Name"
+            />
+
+            <input
+                type="text"
+                id="shortcutUrl"
+                placeholder="https://example.com"
+            />
+
+            <button onclick="addShortcut()">
+                + Add Shortcut
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- Grid -->
+    <div class="shortcuts-title">
+        Saved Shortcuts
+    </div>
+
+    <div
+        class="tiles-grid"
+        id="shortcutsGrid">
+    </div>
+
+    <div
+        class="empty-message display-none"
+        id="emptyMessage"
+    >
+        Please add some shortcuts!
+    </div>
+
+    <div class="footer">
+        GelMa v1.0
+    </div>
+
+</div>
+
+<script>
+// =========================================================
+// GelMa HOME - FULL JS (SQLite + QWebChannel)
+// =========================================================
+
+let currentShortcuts = [];
+let pybridge = null;
+
+// =========================================================
+// 初期化
+// =========================================================
+document.addEventListener('DOMContentLoaded', () => {
+    initWebChannel();
+    bindUIEvents();
+});
+
+// =========================================================
+// WebChannel初期化
+// =========================================================
+function initWebChannel() {
+
+    if (typeof qt === 'undefined') {
+        console.warn('[FrameFit] Qt WebChannelなし → localStorage fallback');
+
+        setupLocalFallback();
+        loadLocal();
+        return;
+    }
+
+    new QWebChannel(qt.webChannelTransport, function (channel) {
+
+        pybridge = channel.objects.pybridge;
+
+        console.log('[FrameFit] WebChannel connected');
+
+        // -----------------------------------------
+        // SQLite → データ受信
+        // -----------------------------------------
+        if (pybridge && typeof pybridge.shortcuts_loaded !== 'undefined') {
+            pybridge.shortcuts_loaded.connect(function (jsonData) {
+
+                try {
+                    currentShortcuts = JSON.parse(jsonData || "[]");
+                    renderShortcuts();
+                } catch (e) {
+                    console.error('[FrameFit] JSON parse error:', e);
+                }
+            });
+
+        } else {
+		    console.warn('[FrameFit] pybridge未初期化 → 自動フォールバック');
+		    setupLocalFallback();
+		    loadLocal();
+        }
+        // -----------------------------------------
+        // 保存結果通知
+        // -----------------------------------------
+        pybridge.save_status_changed.connect(function (success, message) {
+
+            console.log('[SQLite]', success, message);
+
+            if (!success) {
+                alert(message);
+            }
+        });
+
+        // 初回ロード
+        pybridge.load_shortcuts();
+    });
+}
+
+// =========================================================
+// UIイベント
+// =========================================================
+function bindUIEvents() {
+
+    const nameInput = document.getElementById('shortcutName');
+    const urlInput = document.getElementById('shortcutUrl');
+    const searchInput = document.getElementById('searchInput');
+
+    if (nameInput) {
+        nameInput.addEventListener('keydown', e => {
+            if (e.key === 'Enter') addShortcut();
+        });
+    }
+
+    if (urlInput) {
+        urlInput.addEventListener('keydown', e => {
+            if (e.key === 'Enter') addShortcut();
+        });
+    }
+
+    if (searchInput) {
+        searchInput.addEventListener('keydown', e => {
+            if (e.key === 'Enter') filterShortcuts();
+        });
+    }
+}
+
+// =========================================================
+// 追加（SQLite保存）
+// =========================================================
+function addShortcut() {
+
+    const name = document.getElementById('shortcutName').value.trim();
+    let url = document.getElementById('shortcutUrl').value.trim();
+
+    if (!name || !url) {
+        alert('名前とURLを入力してください');
+        return;
+    }
+
+    // protocol補完
+    if (!/^https?:\/\//i.test(url)) {
+        url = 'https://' + url;
+    }
+
+    try {
+        new URL(url);
+    } catch {
+        alert('正しいURLを入力してください');
+        return;
+    }
+
+    if (!pybridge) {
+        alert('WebChannel未接続');
+        return;
+    }
+
+    pybridge.save_shortcut(name, url);
+
+    document.getElementById('shortcutName').value = '';
+    document.getElementById('shortcutUrl').value = '';
+}
+
+// =========================================================
+// 削除（SQLite）
+// =========================================================
+function deleteShortcut(id) {
+
+    if (!confirm('削除しますか？')) return;
+
+    if (pybridge) {
+        pybridge.delete_shortcut(id);
+    }
+}
+
+// =========================================================
+// 検索
+// =========================================================
+function filterShortcuts() {
+
+    const q = document.getElementById('searchInput').value.toLowerCase();
+
+    if (!q) {
+        renderShortcuts();
+        return;
+    }
+
+    const filtered = currentShortcuts.filter(item => {
+        return (
+            item.name.toLowerCase().includes(q) ||
+            item.url.toLowerCase().includes(q)
+        );
+    });
+
+    renderShortcuts(filtered);
+}
+
+// =========================================================
+// 描画
+// =========================================================
+function renderShortcuts(data = currentShortcuts) {
+
+    const grid = document.getElementById('shortcutsGrid');
+    const empty = document.getElementById('emptyMessage');
+
+    if (!grid) return;
+
+    grid.innerHTML = '';
+
+    if (!data || data.length === 0) {
+        if (empty) empty.style.display = 'block';
+        return;
+    }
+
+    if (empty) empty.style.display = 'none';
+
+    data.forEach(item => {
+
+        const card = document.createElement('div');
+        card.className = `tile ${getTheme(item.url)}`;
+
+        card.innerHTML = `
+            <button class="tile-delete" onclick="deleteShortcut(${item.id})">×</button>
+
+            <div class="tile-header">
+                <div class="tile-icon">${getIcon(item.url)}</div>
+            </div>
+
+            <div class="tile-body">
+                <div class="tile-title">${escapeHtml(item.name)}</div>
+                <div class="tile-url">${escapeHtml(item.url)}</div>
+            </div>
+        `;
+
+        card.addEventListener('click', (e) => {
+            if (!e.target.classList.contains('tile-delete')) {
+                window.location.href = item.url;
+            }
+        });
+
+        grid.appendChild(card);
+    });
+}
+
+// =========================================================
+// Google検索
+// =========================================================
+function googleSearch() {
+
+    const q = document.getElementById('searchInput').value.trim();
+    if (!q) return;
+
+    window.location.href =
+        `https://www.google.com/search?q=${encodeURIComponent(q)}`;
+}
+
+// =========================================================
+// ユーティリティ
+// =========================================================
+function escapeHtml(str) {
+
+    if (!str) return '';
+
+    return str.replace(/[&<>"']/g, m => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+    }[m]));
+}
+
+// =========================================================
+// アイコン
+// =========================================================
+function getIcon(rawUrl) {
+	try {
+		const url = new URL(rawUrl.startsWith('http') ? rawUrl : `https://${rawUrl}`);
+		const host = url.hostname.toLowerCase();
+
+		const rules = [
+			{ match: ['youtube.com', 'youtu.be'], icon: '▶️' },
+			{ match: ['google.com', 'google.'], icon: '🔍' },
+			{ match: ['amazon.'], icon: '📦' },
+			{ match: ['github.com'], icon: '🐙' },
+			{ match: ['twitter.com', 'x.com'], icon: '𝕏' },
+			{ match: ['linkedin.com'], icon: '🔗' },
+			{ match: ['spotify.com'], icon: '🎵' },
+			{ match: ['discord.com', 'discord.gg'], icon: '🗪' },
+			{ match: ['firefox.com', 'mozilla.org'], icon: '🦊' },
+            { match: ['duckduckgo.com'], icon: '🐦' },
+			{ match: ['instagram.com'], icon: '📷' },
+			{ match: ['facebook.com', 'fb.com'], icon: '𝕗' },
+			{ match: ['netflix.com'], icon: '🎬' },
+			{ match: ['chatgpt.com', 'openai.com'], icon: '🤖' },
+			{ match: ['gemini.google'], icon: '🤖' },
+			{ match: ['claude.ai'], icon: '🤖' },
+			{ match: ['tiktok.com'], icon: '🎵' },
+			{ match: ['reddit.com'], icon: '👽' },
+			{ match: ['wikipedia.org'], icon: '📚' },
+			{ match: ['yahoo.com'], icon: '𝕐' },
+			{ match: ['bing.com'], icon: '𝕓' },
+			{ match: ['drive.google.com'], icon: '🗂️' },
+			{ match: ['maps.google'], icon: '🗺️' },
+			{ match: ['apple.com'], icon: '🍎' },
+			{ match: ['microsoft.com'], icon: '🪟' },
+			{ match: ['slack.com'], icon: '💬' },
+			{ match: ['notion.so', 'notion.com'], icon: '📝' },
+			{ match: ['figma.com'], icon: '🎨' },
+			{ match: ['zenn.dev'], icon: 'ℤ' },
+			{ match: ['qiita.com'], icon: 'ℚ' },
+			{ match: ['gamewith.jp'], icon: '🎮' },
+			{ match: ['game8.jp'], icon: '🎮' },
+			{ match: ['nicovideo.jp'], icon: '🎥' },
+			{ match: ['tenki.jp'], icon: '🌤️' },
+			{ match: ['wikidot.com'], icon: '🆆' },
+
+			// ローカル系
+			{ match: ['localhost'], icon: '🖥️'  },
+			{ match: ['127.0.0.1'], icon: '🖥️' },
+		];
+
+		for (const rule of rules) {
+			if (rule.match.some(m => host.includes(m))) {
+				return rule.icon;
+			}
+		}
+
+		return '🌐'; // デフォルト
+	} catch {
+		return '🌐';
+	}
+}
+
+// =========================================================
+// テーマ
+// =========================================================
+function getTheme(url) {
+    url = (url || '').toLowerCase();
+
+    // マッチ条件とテーマ名の定義リスト
+    const themeRules = [
+        { match: ['youtube.com', 'youtu.be', 'youtube'], theme: 'youtube' },
+        { match: ['google.com', 'google.', 'google'], theme: 'google' },
+        { match: ['amazon.', 'amazon'], theme: 'amazon' },
+        { match: ['github.com', 'github'], theme: 'github' },
+        { match: ['twitter.com', 'x.com'], theme: 'twitter' },
+        { match: ['linkedin.com'], theme: 'linkedin' },
+        { match: ['spotify.com', 'spotify.com'], theme: 'spotify' },
+        { match: ['discord.com', 'discord.gg'], theme: 'discord' },
+        { match: ['firefox.com', 'mozilla.org'], theme: 'firefox' },
+        { match: ['duckduckgo.com'], theme: 'duckduckgo' },
+        { match: ['instagram.com'], theme: 'instagram' },
+        { match: ['facebook.com', 'fb.com'], theme: 'facebook' },
+        { match: ['netflix.com'], theme: 'netflix' },
+        { match: ['chatgpt.com', 'openai.com'], theme: 'chatgpt' },
+        { match: ['gemini.google'], theme: 'gemini' },
+        { match: ['claude.ai'], theme: 'claude' },
+        { match: ['tiktok.com'], theme: 'tiktok' },
+        { match: ['reddit.com'], theme: 'reddit' },
+        { match: ['wikipedia.org'], theme: 'wikipedia' },
+        { match: ['yahoo.com'], theme: 'yahoo' },
+        { match: ['bing.com'], theme: 'bing' },
+        { match: ['drive.google.com'], theme: 'google-drive' },
+        { match: ['maps.google'], theme: 'google-maps' },
+        { match: ['apple.com'], theme: 'apple' },
+        { match: ['microsoft.com'], theme: 'microsoft' },
+        { match: ['slack.com'], theme: 'slack' },
+        { match: ['notion.so', 'notion.com'], theme: 'notion' },
+        { match: ['figma.com'], theme: 'figma' },
+        { match: ['zenn.dev'], theme: 'zenn' },
+        { match: ['qiita.com'], theme: 'qiita' },
+        { match: ['gamewith.jp'], theme: 'gamewith' },
+        { match: ['game8.jp'], theme: 'game8' },
+        { match: ['nicovideo.jp'], theme: 'nicovideo' },
+        { match: ['tenki.jp'], theme: 'tenki' },
+        { match: ['wikidot.com'], theme: 'wikidot' },
+        
+        // ローカル系
+        { match: ['localhost', '127.0.0.1'], theme: 'local' }
+    ];
+
+    // URLに含まれる文字列があるかループで判定
+    for (const rule of themeRules) {
+        // match配列のいずれかがURLに含まれているかチェック
+        const isMatch = rule.match.some(keyword => url.includes(keyword));
+        if (isMatch) {
+            return rule.theme;
+        }
+    }
+
+    return 'default';
+}
+
+// =========================================================
+// fallback（ローカル用）
+// =========================================================
+function setupLocalFallback() {
+
+    window.pybridge = {
+
+        save_shortcut(name, url) {
+
+            const data = JSON.parse(localStorage.getItem('shortcuts') || '[]');
+
+            data.unshift({ id: Date.now(), name, url });
+
+            localStorage.setItem('shortcuts', JSON.stringify(data));
+
+            currentShortcuts = data;
+            renderShortcuts();
+        },
+
+        delete_shortcut(id) {
+
+            let data = JSON.parse(localStorage.getItem('shortcuts') || '[]');
+
+            data = data.filter(x => x.id !== id);
+
+            localStorage.setItem('shortcuts', JSON.stringify(data));
+
+            currentShortcuts = data;
+            renderShortcuts();
+        },
+
+        load_shortcuts() {
+
+            currentShortcuts =
+                JSON.parse(localStorage.getItem('shortcuts') || '[]');
+
+            renderShortcuts();
+        }
+    };
+}
+
+// =========================================================
+// fallback load
+// =========================================================
+function loadLocal() {
+    window.pybridge.load_shortcuts();
+}
+</script>
+
+</body>
+</html>

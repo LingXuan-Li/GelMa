@@ -1,0 +1,17 @@
+# .gitignore
+
+# Ignore Python bytecode files
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore virtual environment directories
+.venv/
+
+# Ignore Logs and temporary files
+*.log
+temp/
+
+# Ignore IDE specific files
+.vscode/
+
