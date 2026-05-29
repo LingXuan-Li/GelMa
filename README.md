@@ -1,6 +1,11 @@
 # GelMa
 
 ![License](https://img.shields.io/badge/license-MPL--2.0-blue)
+![Python](https://img.shields.io/badge/python-3.10--3.14-blue)
+
+<p align="center">
+  <img src="windows/templates/figure/logo_readme.png" width="500">
+</p>
 
 Copyright (c) 2026 LingXuan-Li
 
@@ -81,4 +86,4 @@ This project is licensed under the Mozilla Public License 2.0.
 - **GitHub**: [![GitHub](https://img.shields.io/badge/-GitHub-181717?logo=github\&logoColor=white)](https://github.com/LingXuan-Li)
 - **Twitter/X**: [![Twitter](https://img.shields.io/twitter/follow/RaccoonDog_329?style=social)](https://x.com/RaccoonDog_329)
 
-For bug reports, please use GitHub [Issues](./issues). For questions, please contact me via Twitter/X [chat](https://x.com/RaccoonDog_329).
+For bug reports, please use GitHub [Issues](https://github.com/LingXuan-Li/GelMa/issues). For questions, please contact me via Twitter/X [chat](https://x.com/RaccoonDog_329).
