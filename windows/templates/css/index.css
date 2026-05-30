@@ -1,0 +1,423 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+License, v. 2.0. If a copy of the MPL was not distributed with this file,
+You can obtain one at https://mozilla.org/MPL/2.0/.
+
+Copyright (c) 2026 LingXuan-Li */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    min-height:100vh;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    background: rgb(160,160,160);
+    color:white;
+    padding:40px 20px;
+}
+
+.container{
+    max-width:1400px;
+    margin:auto;
+}
+
+.header{
+    text-align:center;
+    margin-bottom:40px;
+}
+
+.header h1{
+    font-size:3rem;
+    margin-bottom:10px;
+    text-shadow:0 4px 12px rgba(0,0,0,.3);
+}
+
+.header p{
+    opacity:.9;
+}
+
+/* Search */
+
+.search-section{
+    display:flex;
+    gap:10px;
+    background:white;
+    padding:15px;
+    border-radius:60px;
+    margin-bottom:30px;
+    box-shadow:0 10px 30px rgba(0,0,0,.25);
+}
+
+.search-section input{
+    flex:1;
+    border:none;
+    outline:none;
+    font-size:1rem;
+    padding:10px;
+}
+
+.search-section button{
+    border:none;
+    background:rgb(75, 51, 102);
+    color:white;
+    padding:12px 24px;
+    border-radius:40px;
+    cursor:pointer;
+    font-weight:bold;
+    transition:.2s;
+}
+
+.search-section button:hover{
+    transform:scale(1.05);
+}
+
+/* Add Shortcut */
+
+.add-shortcut-section{
+    background:rgba(255,255,255,.12);
+    -webkit-backdrop-filter:blur(10px);
+    backdrop-filter:blur(10px);
+    padding:20px;
+    border-radius:20px;
+    margin-bottom:40px;
+}
+
+.add-shortcut-form{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    align-items:center;
+}
+
+.add-shortcut-form input{
+    flex:1;
+    min-width:220px;
+    padding:14px;
+    border:none;
+    border-radius:10px;
+    outline:none;
+}
+
+.add-shortcut-form button{
+    border:none;
+    padding:14px 24px;
+    border-radius:10px;
+    cursor:pointer;
+    background:white;
+    color:#333;
+    font-weight:bold;
+    transition:.2s;
+}
+
+.add-shortcut-form button:hover{
+    transform:scale(1.05);
+}
+
+/* Grid */
+
+.shortcuts-title{
+    font-size:1.5rem;
+    margin-bottom:20px;
+    font-weight:bold;
+}
+
+.tiles-grid{
+    display:grid;
+    grid-template-columns:
+        repeat(auto-fit,minmax(250px,1fr));
+    gap:25px;
+}
+
+/* Tile */
+
+.tile{
+    position:relative;
+    overflow:hidden;
+    border-radius:20px;
+    background:white;
+    color:#333;
+    cursor:pointer;
+    transition:.25s;
+    box-shadow:0 10px 30px rgba(0,0,0,.2);
+}
+
+.tile:hover{
+    transform:translateY(-10px);
+    box-shadow:0 20px 50px rgba(0,0,0,.35);
+}
+
+.tile-header{
+    height:140px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    overflow:hidden;
+}
+
+.tile-header::after{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:rgba(255,255,255,.05);
+}
+
+.tile-icon{
+    font-size:3rem;
+    z-index:2;
+}
+
+.tile-body{
+    padding:18px;
+}
+
+.tile-title{
+    font-size:1.2rem;
+    font-weight:bold;
+    margin-bottom:10px;
+}
+
+.tile-url{
+    font-size:.85rem;
+    color:#777;
+    word-break:break-all;
+}
+
+.tile-favicon{
+    width:22px;
+    height:22px;
+    position:absolute;
+    top:10px;
+    left:10px;
+    background:white;
+    border-radius:50%;
+    padding:2px;
+}
+
+.tile-delete{
+    position:absolute;
+    top:10px;
+    right:10px;
+    width:32px;
+    height:32px;
+    border:none;
+    border-radius:50%;
+    background:rgba(255,0,0,.85);
+    color:white;
+    cursor:pointer;
+    font-weight:bold;
+    display:none;
+    z-index:3;
+}
+
+.tile:hover .tile-delete{
+    display:block;
+}
+
+.empty-message{
+    text-align:center;
+    padding:60px;
+    opacity:.8;
+}
+
+/* Themes */
+
+.youtube .tile-header{
+    background:linear-gradient(135deg,#ff0000,#282828);
+}
+
+.google .tile-header{
+    background:linear-gradient(135deg,#4285F4,#EA4335,#FBBC05,#34A853);
+}
+
+.github .tile-header{
+    background:linear-gradient(135deg,#333,#111);
+}
+
+.amazon .tile-header{
+    background:linear-gradient(135deg,#FF9900,#232F3E);
+}
+
+.twitter .tile-header{
+    background:linear-gradient(135deg,#000,#1DA1F2);
+}
+
+.linkedin .tile-header{
+    background:linear-gradient(135deg,#0A66C2,#FFF);
+}
+
+.spotify .tile-header{
+    background:linear-gradient(135deg,#1DB954,#191414);
+}
+
+.discord .tile-header{
+    background:linear-gradient(135deg,#5865F2,#23272A);
+}
+
+.firefox .tile-header{
+    background:linear-gradient(135deg,#FF7139,#00539F);
+}
+
+.instagram .tile-header{
+    background:linear-gradient(135deg,#E4405F,#FCAF45,#833AB4);
+}
+
+.facebook .tile-header{
+    background:linear-gradient(135deg,#1877F2,#FFF);
+}
+
+.netflix .tile-header{
+    background:linear-gradient(135deg,#E50914,#221F1F);
+}
+
+.tiktok .tile-header{
+    background:linear-gradient(135deg,#000,#25F4EE,#FE2C55);
+}
+
+.reddit .tile-header{
+    background:linear-gradient(135deg,#FF4500,#CEE3F8);
+}
+
+.wikipedia .tile-header{
+    background:linear-gradient(135deg,#000,#FFF,#636466);
+}
+
+.yahoo .tile-header{
+    background:linear-gradient(135deg,#6001D2,#FFF);
+}
+
+.bing .tile-header{
+    background:linear-gradient(135deg,#008373,#F2F2F2);
+}
+
+.duckduckgo .tile-header{
+    background:linear-gradient(135deg,#DE5833,#FFF);
+}
+
+.apple .tile-header{
+    background:linear-gradient(135deg,#A2AAAD,#000);
+}
+
+.microsoft .tile-header{
+    background:linear-gradient(135deg,#F25022,#7FBA00,#00A4EF,#FFB900);
+}
+
+.chatgpt .tile-header{
+    background:linear-gradient(135deg,#10A37F,#202123);
+}
+
+.gemini .tile-header{
+    background:linear-gradient(135deg,#4285F4,#8E75FF);
+}
+
+.claude .tile-header{
+    background:linear-gradient(135deg,#D97757,#2D2D2D);
+}
+
+.google-drive .tile-header{
+    background:linear-gradient(135deg,#0F9D58,#4285F4,#F4B400);
+}
+
+.google-maps .tile-header{
+    background:linear-gradient(135deg,#34A853,#EA4335,#4285F4);
+}
+
+.slack .tile-header{
+    background:linear-gradient(135deg,#4A154B,#36C5F0,#2EB67D,#ECB22E);
+}
+
+.notion .tile-header{
+    background:linear-gradient(135deg,#000,#FFF);
+}
+
+.figma .tile-header{
+    background:linear-gradient(135deg,#F24E1E,#A259FF,#0ACF83);
+}
+
+.zann .tile-header{
+    background:linear-gradient(135deg,#3EA8FF,#0F172A);
+}
+
+.qiita .tile-header{
+    background:linear-gradient(135deg,#55C500,#2C2C2C);
+}
+
+.gamewith .tile-header{
+    background:linear-gradient(135deg,#34b792,#f8f8f8);
+}
+
+.game8 .tile-header{
+    background:linear-gradient(135deg,#ffe053,#000);
+}
+
+.nicovideo .tile-header{
+    background:linear-gradient(135deg,#252525,#FFF);
+}
+
+.tenki .tile-header{
+    background:linear-gradient(135deg,#0085CC,#F5A623);
+}
+
+.wikidot .tile-header{
+    background:linear-gradient(135deg,#000,#ff0109, #e5e5e0);
+}
+
+.local .tile-header{
+    background:linear-gradient(135deg,#4CAF50,#263238);
+}
+
+.default .tile-header{
+    background:linear-gradient(135deg,#5800bd,#af0daf);
+}
+
+/* Footer */
+
+.footer{
+    text-align:center;
+    margin-top:60px;
+    opacity:.7;
+}
+
+/* Mobile */
+
+@media(max-width:768px){
+
+    .header h1{
+        font-size:2rem;
+    }
+
+    .search-section{
+        flex-direction:column;
+        border-radius:20px;
+    }
+
+    .search-section button{
+        width:100%;
+    }
+
+    .add-shortcut-form{
+        flex-direction:column;
+    }
+
+    .add-shortcut-form input,
+    .add-shortcut-form button{
+        width:100%;
+    }
+}
+
+.display-none{
+    display:none;
+}
+
+.img-container {
+  display: flex;
+  justify-content: center; /* 横方向中央寄せ */
+  gap: 10px;              /* 画像の間隔 */
+}
+
+.img-container img {
+  height: 75px; /* 必要に応じて */
+  width: auto;
+}

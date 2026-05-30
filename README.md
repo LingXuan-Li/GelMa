@@ -1,7 +1,9 @@
 # GelMa
 
-![License](https://img.shields.io/badge/license-MPL--2.0-blue)
+![License](https://img.shields.io/github/license/LingXuan-Li/GelMa)
+![Top Language](https://img.shields.io/github/languages/top/LingXuan-Li/GelMa)
 ![Python](https://img.shields.io/badge/python-3.10--3.14-blue)
+![Last Commit](https://img.shields.io/github/last-commit/LingXuan-Li/GelMa)
 
 <p align="center">
   <img src="windows/templates/figure/logo_readme.png" width="500">
