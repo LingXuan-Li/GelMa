@@ -8,7 +8,6 @@
 <p align="center">
   <img src="windows/templates/figure/logo_readme.png" width="500">
 </p>
-以下が日本語訳です。
 
 Copyright (c) 2026 LingXuan-Li
 
